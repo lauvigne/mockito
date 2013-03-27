@@ -5,6 +5,8 @@
 
 package org.mockito.internal.invocation;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,7 +74,9 @@ public class InvocationsFinder {
         return null;
     }
     
-    public Invocation findSimilarInvocation(List<Invocation> invocations, InvocationMatcher wanted) {
+    public List<Invocation> findSimilarInvocation(List<Invocation> invocations, InvocationMatcher wanted) {
+        List<Invocation> result = new ArrayList<Invocation>();
+
         Invocation firstSimilar = null;
         for (Invocation invocation : invocations) {
             if (!wanted.hasSimilarMethod(invocation)) {
@@ -81,12 +85,16 @@ public class InvocationsFinder {
             if (firstSimilar == null) {
                 firstSimilar = invocation;
             }
-            if (wanted.hasSameMethod(invocation)) {
-                return invocation;
+            if (wanted.hasSameMethod(invocation) && invocation != null) {
+                result.add(invocation);
             }
         }
-        
-        return firstSimilar;
+
+        if (result.isEmpty() && firstSimilar != null) {
+            return Collections.singletonList(firstSimilar);
+        }
+
+        return result;
     }
     
     public Invocation findFirstUnverified(List<Invocation> invocations) {

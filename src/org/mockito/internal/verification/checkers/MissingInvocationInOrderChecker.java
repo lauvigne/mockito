@@ -48,8 +48,10 @@ public class MissingInvocationInOrderChecker {
              */
              List<Invocation> actualInvocations = finder.findInvocations(invocations, wanted);
              if (actualInvocations == null || actualInvocations.isEmpty())  {
-                 Invocation similar = finder.findSimilarInvocation(invocations, wanted);
-                 if (similar != null) {
+                List<Invocation> similars = finder.findSimilarInvocation(invocations, wanted);
+
+                if (!similars.isEmpty()) {
+                    Invocation similar = similars.get(0);
                      Integer[] indicesOfSimilarMatchingArguments =
                              new ArgumentMatchingTool().getSuspiciouslyNotMatchingArgsIndexes(wanted.getMatchers(),
                                      similar.getArguments());

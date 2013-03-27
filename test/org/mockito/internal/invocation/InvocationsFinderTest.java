@@ -110,8 +110,8 @@ public class InvocationsFinderTest extends TestBase {
     public void shouldFindFirstSimilarInvocationByName() throws Exception {
         Invocation overloadedSimpleMethod = new InvocationBuilder().mock(mock).simpleMethod().arg("test").toInvocation();
         
-        Invocation found = finder.findSimilarInvocation(invocations, new InvocationMatcher(overloadedSimpleMethod));
-        assertSame(found, simpleMethodInvocation);
+        List<Invocation> found = finder.findSimilarInvocation(invocations, new InvocationMatcher(overloadedSimpleMethod));
+        assertSame(found.get(0), simpleMethodInvocation);
     }
     
     @Test
@@ -120,8 +120,8 @@ public class InvocationsFinderTest extends TestBase {
         
         invocations.add(overloadedDifferentMethod);
         
-        Invocation found = finder.findSimilarInvocation(invocations, new InvocationMatcher(overloadedDifferentMethod));
-        assertSame(found, overloadedDifferentMethod);
+        List<Invocation> found = finder.findSimilarInvocation(invocations, new InvocationMatcher(overloadedDifferentMethod));
+        assertSame(found.get(0), overloadedDifferentMethod);
     }
     
     @Test

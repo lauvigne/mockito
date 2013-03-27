@@ -32,8 +32,11 @@ public class MissingInvocationChecker {
         List<Invocation> actualInvocations = finder.findInvocations(invocations, wanted);
         
         if (actualInvocations.isEmpty()) {
-            Invocation similar = finder.findSimilarInvocation(invocations, wanted);
-            if (similar != null) {
+            List<Invocation> similars = finder.findSimilarInvocation(invocations, wanted);
+
+            if (!similars.isEmpty()) {
+                Invocation similar = similars.get(0);
+
                 ArgumentMatchingTool argumentMatchingTool = new ArgumentMatchingTool();
                 Integer[] indexesOfSuspiciousArgs = argumentMatchingTool.getSuspiciouslyNotMatchingArgsIndexes(wanted.getMatchers(), similar.getArguments());
                 SmartPrinter smartPrinter = new SmartPrinter(wanted, similar, indexesOfSuspiciousArgs);

@@ -5,6 +5,7 @@
 
 package org.mockito.internal.verification.checkers;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,9 +41,9 @@ class InvocationsFinderStub extends InvocationsFinder {
         return actualToReturn;
     }
     
-    @Override public Invocation findSimilarInvocation(List<Invocation> invocations, InvocationMatcher wanted) {
+    @Override public List<Invocation> findSimilarInvocation(List<Invocation> invocations, InvocationMatcher wanted) {
         this.invocations = invocations;
-        return similarToReturn;
+        return (similarToReturn == null) ? Collections.<Invocation>emptyList() : Collections.singletonList(similarToReturn);
     }
     
     @Override public Invocation findFirstUnverified(List<Invocation> invocations) {
