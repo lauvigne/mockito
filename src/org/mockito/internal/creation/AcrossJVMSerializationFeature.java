@@ -12,6 +12,7 @@ import org.mockito.internal.util.MockUtil;
 import org.mockito.internal.util.reflection.FieldSetter;
 import org.mockito.mock.MockCreationSettings;
 import org.mockito.mock.MockName;
+import org.mockito.mock.SerializableMode;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -157,7 +158,7 @@ public class AcrossJVMSerializationFeature implements Serializable {
      * @param <T> Type param to not be bothered by the generics
      */
     public <T> void enableSerializationAcrossJVM(MockCreationSettings<T> settings) {
-        if (settings.isSerializable()) {
+        if (settings.getSerializableMode() == SerializableMode.ACROSS_CLASSLOADERS) {
             // havin faith that this set is modifiable
             // TODO use a proper way to add the interface
             settings.getExtraInterfaces().add(AcrossJVMMockitoMockSerializable.class);
@@ -393,7 +394,7 @@ public class AcrossJVMSerializationFeature implements Serializable {
          * @return The marker if this is a Mockito proxy class, otherwise returns a void marker.
          */
         private String mockitoProxyClassMarker(Class<?> cl) {
-            if (mockUtil.isMock(cl)) {
+            if (AcrossJVMMockitoMockSerializable.class.isAssignableFrom(cl)) {
                 return MOCKITO_PROXY_MARKER;
             } else {
                 return NOTHING;
@@ -410,7 +411,7 @@ public class AcrossJVMSerializationFeature implements Serializable {
      *
      * @see #enableSerializationAcrossJVM(org.mockito.mock.MockCreationSettings)
      */
-    public interface AcrossJVMMockitoMockSerializable {
+    public static interface AcrossJVMMockitoMockSerializable {
         public Object writeReplace() throws java.io.ObjectStreamException;
     }
 }
